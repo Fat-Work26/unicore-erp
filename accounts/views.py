@@ -2,8 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login
 
 
-def home(request):
-    return render(request,'accounts/home.html')
+
 def login_view(request):
     if request.method == 'POST':
         username = request.POST.get('username')
@@ -19,7 +18,7 @@ def login_view(request):
     
 def home_user(request):
     if request.user.role == 'TEACHER':
-        return render(request,'accounts/teacher_home.html')
+        return render(request,'teachers/home_teacher.html')
     elif request.user.role == 'STUDENT':
         return render(request,'accounts/student_home.html')
     elif request.user.role == 'SUPER_ADMIN':

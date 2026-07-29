@@ -1,19 +1,27 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-    <h1>page login</h1>
-    <form action="" method="post">
+{% extends 'base.html' %}
+
+{% block title %}تسجيل الدخول - Unicore ERP{% endblock %}
+
+{% block content %}
+<div class="max-w-md mx-auto bg-white p-8 rounded-xl shadow-lg border border-gray-100">
+    <h2 class="text-2xl font-bold text-center text-gray-800 mb-6">تسجيل الدخول</h2>
+    
+    <form method="POST" class="space-y-4">
         {% csrf_token %}
-        username: <input type="text" name="username" id="">
-        <br/><br/>
-        password: <input type="password" name="password" id="">
-         <br/><br/>
-        <input type="submit" value="login">
+        <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">اسم المستخدم</label>
+            <input type="text" name="username" id="" class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+        </div>
+        
+        <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">كلمة المرور</label>
+            <input type="password" name="password" id="" class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+        </div>
+
+        <button type="submit" class="w-full bg-indigo-600 text-white py-2 rounded-lg font-semibold hover:bg-indigo-700 transition">
+            دخول
+        </button>
     </form>
-</body>
-</html>
+</div>
+
+{% endblock %}
