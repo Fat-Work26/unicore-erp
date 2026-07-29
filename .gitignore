@@ -4,3 +4,7 @@ venv/
 __pycache__
 .DS_Store
 Thumbs.db
+
+#Tailwind CLI Binary & Generated Output
+tailwindcss
+static/css/output.css
