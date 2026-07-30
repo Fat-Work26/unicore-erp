@@ -46,10 +46,11 @@ class OrganizationalUnit(models.Model):
 
     class Meta:
         unique_together = ('university','code')
-        verbose_name = "وحدة تنظيمية"   
-        verbose_name_plural = "الوحدات التنظيمية" 
+        # verbose_name = "وحدة تنظيمية"   
+        # verbose_name_plural = "الوحدات التنظيمية" 
     def __str__(self):
-        return(f"{self.name ({self.get_unit_type_display()})}")    
+        return f"{self.name} " 
+        
 
 
 
@@ -65,7 +66,7 @@ class Departement(models.Model):
 
     class Meta:
         unique_together = ('unit','code')
-        verbose_name = "قسم / فرع" 
-        verbose_name_plural = " الاقسام و الفروع"  
+        # verbose_name = "قسم / فرع" 
+        # verbose_name_plural = " الاقسام و الفروع"  
     def __str__(self):
         return (f"{self.name}-{self.unit.name}")    
