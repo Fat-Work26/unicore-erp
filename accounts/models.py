@@ -10,7 +10,16 @@ class User(AbstractUser):
         SUPER_ADMIN = 'SUPER_ADMIN'
         ADMIN = 'ADMIN'
     role = models.CharField(max_length=20,choices=Role.choices, verbose_name="نوع الحساب")
-    num_inscription = models.CharField(max_length=50, unique =True, verbose_name='رقم التسجيل')#for studiant
+    # num_inscription is unique for students.
+    # null=True & default=None are required to allow multiple non-student accounts 
+    # (like Teachers) to coexist without violating the UNIQUE constraint in PostgreSQL.
+    num_inscription = models.CharField(
+        max_length=50, 
+        unique =True,
+        null   =True,
+        blank  =True,
+        default=True, 
+        verbose_name='رقم التسجيل')#for studiant
 
 # ************************************************************************
 
