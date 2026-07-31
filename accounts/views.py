@@ -11,7 +11,7 @@ def login_view(request):
         user = authenticate(request,username=username,password=password)
         if user and user.role:
             login(request,user)
-            return home_user(request)
+            return redirect('home_user')
         else:
             return render(request,'accounts/login.html',{'error':'خطأ في المستخدم'})    
     return render(request,'accounts/login.html')
