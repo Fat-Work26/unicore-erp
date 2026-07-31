@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
-from .models import User,TeacherProfile,Teacher
+from .models import User,TeacherProfile,Teacher,Student
 import os
 
 
@@ -29,12 +29,12 @@ class TeacherUserCreationForm(forms.ModelForm):
 class CustomTeacherUserAdmin(UserAdmin):
     add_form = TeacherUserCreationForm
     # 1. إظهار حقل role في جدول عرض المستخدمين الخارجي
-    list_display = ['username', 'email', 'role', 'is_staff']
+    list_display = ['username', 'email',  'is_staff']
     
     # 2. إظهار حقل role داخل صفحة تعديل المستخدم
-    fieldsets = UserAdmin.fieldsets + (
-        ('الصلاحيات والوظيفة', {'fields': ('role',)}),
-    )
+    # fieldsets = UserAdmin.fieldsets + (
+    #     ('الصلاحيات والوظيفة', {'fields': ('role',)}),
+    # )
     
     # 3. إظهار حقل role في صفحة إنشاء مستخدم جديد
    
@@ -45,7 +45,7 @@ class CustomTeacherUserAdmin(UserAdmin):
         }),
     )
 
-admin.site.register(User, CustomTeacherUserAdmin)
+# admin.site.register(User, CustomTeacherUserAdmin)
 
 
 class TeacherAdmin(CustomTeacherUserAdmin):
@@ -76,3 +76,34 @@ class TeacherProfileAdmin(admin.ModelAdmin):
     list_filter = ('department', 'rank')
 
 admin.site.register(TeacherProfile,TeacherProfileAdmin)
+# ***************************************************
+# Studiants
+# ***************************************************
+class StudentUserCreationForm(forms.ModelForm):
+    class Meta:
+        model  = User
+        fields = ('username','num_inscription')
+
+    def save(self,commit=True):
+        user = super().save(commit=False)
+        # user.email = None
+        user.role =  User.Role.STUDENT
+        user.set_password(DEFAULT_USER_PASSWORD)
+        if commit:
+            user.save()
+        return user   
+
+class CustomStudentUserAdmin(UserAdmin):
+    add_form = StudentUserCreationForm
+    list_display = ['username','num_inscription']
+    add_fieldsets = (
+        (None, {
+            'classes': ('wide',),             # تنسيق عريض ومريح للاستمارة
+            'fields': ('username','num_inscription'),  # الحقول المعروضة للإداري في صفحة + Add
+        }),)
+        
+class StudentAdmin(CustomStudentUserAdmin):
+    def get_queryset(self,request):
+        return super().get_queryset(request).filter(role = User.Role.STUDENT)
+
+admin.site.register(Student, StudentAdmin)

@@ -10,7 +10,12 @@ class User(AbstractUser):
         SUPER_ADMIN = 'SUPER_ADMIN'
         ADMIN = 'ADMIN'
     role = models.CharField(max_length=20,choices=Role.choices, verbose_name="نوع الحساب")
-    email = models.EmailField(unique=True, blank=False)
+    email = models.EmailField(
+        unique =True,
+        null   =True,
+        blank  =True,
+        default=None,
+        )
     # num_inscription is unique for students.
     # null=True & default=None are required to allow multiple non-student accounts 
     # (like Teachers) to coexist without violating the UNIQUE constraint in PostgreSQL.
@@ -28,11 +33,13 @@ class User(AbstractUser):
 class Teacher(User):
     class Meta:
         proxy = True
-        verbose_name = 'أستاذ'
-        verbose_name_plural = 'الأساتذة'
+        # verbose_name = 'استاذ'
+        # verbose_name_plural = 'الأساتذة'
 
-
-
+class Student(User):
+    class Meta:
+        proxy = True
+# *****************************
 class TeacherProfile(models.Model):
     # 1. الربط بالحساب الرئيسي
     user = models.OneToOneField(
