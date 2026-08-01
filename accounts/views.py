@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
-from django.contrib.auth import authenticate, login
-
-
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
+from django.views.decorators.http import require_POST
 
 def login_view(request):
     if request.method == 'POST':
@@ -15,7 +15,14 @@ def login_view(request):
         else:
             return render(request,'accounts/login.html',{'error':'خطأ في المستخدم'})    
     return render(request,'accounts/login.html')
-    
+
+@login_required
+@require_POST
+def logout_view(request):
+    logout(request)
+    return redirect('home')
+
+@login_required
 def home_user(request):
     if request.user.role == 'TEACHER':
         return render(request,'teachers/home_teacher.html')

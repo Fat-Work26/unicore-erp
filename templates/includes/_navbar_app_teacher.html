@@ -1,0 +1,59 @@
+<nav class="navbar">
+  <div class="nav-container">
+    
+    <!-- الشعار واختصار الفضاء -->
+    <div class="nav-brand">
+      <span class="logo-text">UNICORE ERP</span>
+      <span class="badge">فضاء الأستاذ</span>
+    </div>
+
+    <!-- قائمة المستخدم والـ Dropdown -->
+    <div class="user-menu">
+      
+      <button id="user-menu-btn" class="user-button">
+        <span class="avatar">{{ request.user.username|slice:":1"|upper }}</span>
+        <span class="username">{{ request.user.get_full_name|default:request.user.username }}</span>
+        <span class="arrow">▼</span>
+      </button>
+
+      <!-- القائمة المنسدلة -->
+      <div id="user-dropdown" class="dropdown-menu hidden">
+        <div class="dropdown-header">
+          <small>الحساب الحالي</small>
+          <strong>{{ request.user.email }}</strong>
+        </div>
+
+        <a href="#" class="dropdown-item">الملف الشخصي</a>
+
+        <form action="{% url 'logout' %}" method="POST">
+          {% csrf_token %}
+          <button type="submit" class="dropdown-item logout-btn">تسجيل الخروج</button>
+        </form>
+      </div>
+
+    </div>
+
+  </div>
+</nav>
+
+<!-- سكريبت الفتح والإغلاق البسيط جداً -->
+<script>
+  const btn = document.getElementById('user-menu-btn');
+  const dropdown = document.getElementById('user-dropdown');
+
+  btn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    dropdown.classList.toggle('hidden');
+  });
+
+  document.addEventListener('click', () => {
+    dropdown.classList.add('hidden');
+  });
+</script>
+
+
+
+
+
+
+
