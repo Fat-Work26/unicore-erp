@@ -1,0 +1,79 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark py-2" dir="rtl">
+  <div class="container-fluid">
+       
+    <a class="navbar-brand fw-bold" href="{% url 'home' %}">
+        <span class="text-glow">FD.</span><span class="brand-name">Unicore ERP</span>
+    </a>
+
+    
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#unicoreNavbar" aria-controls="unicoreNavbar" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    
+    <div class="collapse navbar-collapse" id="unicoreNavbar">
+      
+   
+      <ul class="navbar-nav ms-auto mb-2 mb-lg-0 align-items-center">
+        <li class="nav-item">
+          <a class="nav-link active border rounded px-3 ms-2" aria-current="page" href="{% url 'home' %}">الرئيسية</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link px-3" href="#">***</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link px-3" href="#">***</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link px-3" href="#">***</a>
+        </li>
+      </ul>
+
+      <div class="d-flex align-items-center" >
+        <div class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle d-flex align-items-center gap-2 text-white" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            <!-- User Profile Avatar -->
+            <img src="****" alt="User Avatar" class="rounded-circle border border-secondary" width="35" height="35">
+            <!-- Account Name -->
+            <span class="fw-semibold small">{{ request.user.username|default:"أحمد علي" }}</span>
+          </a>
+          
+          <ul class="dropdown-menu dropdown-menu-dark shadow dropdown-menu-end text-end" dir="rtl">
+            <li><a class="dropdown-item" href="#">الملف الشخصي</a></li>
+            <li><a class="dropdown-item" href="#">الإعدادات</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li>
+              <form action="{% url 'logout' %}" method="POST">
+                {% csrf_token %}
+                <button type="submit" class="dropdown-item text-danger">تسجيل الخروج</button>
+              </form>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <!-- <div class="d-flex align-items-center">
+         <div class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle text-white" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Dropdown
+          </a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="#">الملف الشخصي</a></li>
+            <li><a class="dropdown-item" href="#">***</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li>
+              <form action="{% url 'logout' %}" method="POST">
+                {% csrf_token %}
+                <button type="submit" class="dropdown-item logout-btn">تسجيل الخروج</button>
+              </form>
+            </li>
+          </ul>
+        </div>
+         -->
+
+
+      </div>
+
+    </div>
+  </div>
+</nav>
+
