@@ -19,7 +19,21 @@
           <a class="nav-link active border rounded px-3 ms-2" aria-current="page" href="{% url 'home' %}">الرئيسية</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link px-3" href="#">***</a>
+          <!-- <a class="nav-link px-3" href="#">التربص</a> -->
+           <div class="d-flex align-items-center" >
+        <div class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle d-flex align-items-center gap-2 text-white" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            <!-- Account Name -->
+            <span class="fw-semibold small">التربص</span>
+          </a>
+          
+          <ul class="dropdown-menu dropdown-menu-dark shadow dropdown-menu-end text-end" dir="rtl">
+            <li><a class="dropdown-item" href="{% url 'newOrder' %}">طلب التربص</a></li>
+            <li><a class="dropdown-item" href="#">الملف بعد التربص</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item" href="#">الأرشيف</a></li>
+          </ul>
+        </div>
         </li>
         <li class="nav-item">
           <a class="nav-link px-3" href="#">***</a>
@@ -35,40 +49,23 @@
             <!-- User Profile Avatar -->
             <img src="****" alt="User Avatar" class="rounded-circle border border-secondary" width="35" height="35">
             <!-- Account Name -->
-            <span class="fw-semibold small">{{ request.user.username|default:"أحمد علي" }}</span>
+            <span class="fw-semibold small">{{ request.user.username|default:" د:" }}</span>
           </a>
           
           <ul class="dropdown-menu dropdown-menu-dark shadow dropdown-menu-end text-end" dir="rtl">
             <li><a class="dropdown-item" href="#">الملف الشخصي</a></li>
-            <li><a class="dropdown-item" href="#">الإعدادات</a></li>
+            <li><a class="dropdown-item" href="#">تغير كلمة المرور</a></li>
             <li><hr class="dropdown-divider"></li>
             <li>
               <form action="{% url 'logout' %}" method="POST">
                 {% csrf_token %}
-                <button type="submit" class="dropdown-item text-danger">تسجيل الخروج</button>
+                <button type="submit" class="dropdown-item text-glow">تسجيل الخروج</button>
               </form>
             </li>
           </ul>
         </div>
       </div>
-      <!-- <div class="d-flex align-items-center">
-         <div class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle text-white" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-            Dropdown
-          </a>
-          <ul class="dropdown-menu">
-            <li><a class="dropdown-item" href="#">الملف الشخصي</a></li>
-            <li><a class="dropdown-item" href="#">***</a></li>
-            <li><hr class="dropdown-divider"></li>
-            <li>
-              <form action="{% url 'logout' %}" method="POST">
-                {% csrf_token %}
-                <button type="submit" class="dropdown-item logout-btn">تسجيل الخروج</button>
-              </form>
-            </li>
-          </ul>
-        </div>
-         -->
+     
 
 
       </div>

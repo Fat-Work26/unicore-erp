@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'accounts',
     'teachers',
     'organization',
+    'Academic_Mobility',
 ]
 
 MIDDLEWARE = [

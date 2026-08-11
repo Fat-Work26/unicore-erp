@@ -8,3 +8,4 @@ Thumbs.db
 #Tailwind CLI Binary & Generated Output
 tailwindcss
 static/css/output.css
+static/pdfs/

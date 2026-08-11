@@ -23,5 +23,6 @@ urlpatterns = [
     path('',TemplateView.as_view(template_name='public/home.html'),name='home'),
     path('accounts/',include('accounts.urls')),
     path('teachers/',include('teachers.urls')),
+    path('Academic_Mobility/',include('Academic_Mobility.urls')),
 
 ]
