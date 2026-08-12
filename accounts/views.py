@@ -9,7 +9,7 @@ def login_view(request):
         password = request.POST .get('password')
 
         user = authenticate(request,username=username,password=password)
-        if user and user.role:
+        if user and user.user_type:
             login(request,user)
             return redirect('home_user')
         else:
@@ -24,11 +24,11 @@ def logout_view(request):
 
 @login_required
 def home_user(request):
-    if request.user.role == 'TEACHER':
+    if request.user.user_type == 'TEACHER':
         return render(request,'teachers/home_teacher.html')
-    elif request.user.role == 'STUDENT':
+    elif request.user.user_type == 'STUDENT':
         return render(request,'accounts/student_home.html')
-    elif request.user.role == 'SUPER_ADMIN':
+    elif request.user.user_type == 'SUPER_ADMIN':
         return render(request,'accounts/dashboard_super_admin.html')    
     else:
         return redirect('login')

@@ -1,0 +1,103 @@
+{% extends './base_app_teacher.html' %}
+
+{% block content %}
+<div class="container py-4" dir="rtl">
+    <div class="row g-4">
+        
+        <!-- Left Sidebar: Profile Card & Basic Info -->
+        <div class="col-lg-4">
+            <div class="card shadow-sm border-0 text-center p-3">
+                <div class="card-body">
+                    {% if user.teacher_profile.photo %}
+                        <img src="{{ user.teacher_profile.photo.url }}" alt="Profile Photo" class="rounded-circle img-thumbnail mb-3" style="width: 120px; height: 120px; object-fit: cover;">
+                    {% else %}
+                        <div class="rounded-circle bg-secondary text-white d-flex align-items-center justify-content-center mx-auto mb-3" style="width: 120px; height: 120px; font-size: 2.5rem;">
+                            {{ user.username|slice:":1"|upper }}
+                        </div>
+                    {% endif %}
+
+                    <h4 class="card-title fw-bold text-dark">
+                        {% if user.teacher_profile %}
+                            {{ user.teacher_profile.first_name_ar }} {{ user.teacher_profile.last_name_ar }}
+                        {% else %}
+                            {{ user.get_full_name|default:user.username }}
+                        {% endif %}
+                    </h4>
+                    
+                    <p class="text-muted mb-2">
+                        <span class="badge bg-primary fs-6">{{ user.get_user_type_display }}</span>
+                    </p>
+
+                    <hr class="my-3">
+
+                    <ul class="list-group list-group-flush text-end">
+                        <li class="list-group-item d-flex justify-content-between align-items-center px-0">
+                            <strong>البريد الإلكتروني:</strong>
+                            <span class="text-muted">{{ user.email|default:"غير محدد" }}</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center px-0">
+                            <strong>اسم المستخدم:</strong>
+                            <span class="text-muted">{{ user.username }}</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Content: Detailed Professional Information -->
+        <div class="col-lg-8">
+            <div class="card shadow-sm border-0 p-3">
+                <div class="card-body">
+                    <h5 class="card-title fw-bold text-primary mb-3">البيانات الإدارية والأكاديمية</h5>
+                    <hr>
+
+                    {% if user.teacher_profile %}
+                        <!-- Teacher Specific Fields -->
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="fw-bold text-secondary">الرقم الوظيفي:</label>
+                                <p class="fs-6 text-dark">{{ user.teacher_profile.employee_id }}</p>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="fw-bold text-secondary">الرتبة الأكاديمية:</label>
+                                <p class="fs-6 text-dark">{{ user.teacher_profile.rank }}</p>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="fw-bold text-secondary">الدرجة:</label>
+                                <p class="fs-6 text-dark">{{ user.teacher_profile.grade|default:" غير محددة" }}</p>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="fw-bold text-secondary">موقع المكتب:</label>
+                                <p class="fs-6 text-dark">{{ user.teacher_profile.office_location|default:"غير محدد" }}</p>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="fw-bold text-secondary">تاريخ أول التحاق:</label>
+                                <p class="fs-6 text-dark">{{ user.teacher_profile.joining_date|default:"غير محدد" }}</p>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="fw-bold text-secondary">رقم الهاتف:</label>
+                                <p class="fs-6 text-dark">{{ user.teacher_profile.phone_number|default:"غير محدد" }}</p>
+                            </div>
+                        </div>
+
+                        {% if user.teacher_profile.bio %}
+                            <hr class="my-3">
+                            <h6 class="fw-bold text-secondary">نبذة مختصرة:</h6>
+                            <p class="text-muted">{{ user.teacher_profile.bio }}</p>
+                        {% endif %}
+
+                    {% else %}
+                        <p class="text-muted">لا تتوفر تفاصيل إضافية لهذا الحساب حالياً.</p>
+                    {% endif %}
+
+                    <!-- Edit Profile Action Button -->
+                    <div class="mt-4 text-start">
+                        <a href="#" class="btn btn-outline-primary px-4">تعديل البيانات</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+{% endblock %}
