@@ -4,12 +4,15 @@ from django.conf import settings
 from organization.models import Departement
 
 class User(AbstractUser):
-    class Role(models.TextChoices):
+    class UserType(models.TextChoices):
         STUDENT = 'STUDENT'
         TEACHER = 'TEACHER'
         SUPER_ADMIN = 'SUPER_ADMIN'
-        ADMIN = 'ADMIN'
-    role = models.CharField(max_length=20,choices=Role.choices, verbose_name="نوع الحساب")
+        STAFF = 'STAFF'
+    user_type = models.CharField(
+        max_length=50,
+        choices=UserType.choices,
+        verbose_name="نوع الحساب")
     email = models.EmailField(
         unique =True,
         null   =True,
@@ -67,14 +70,14 @@ class TeacherProfile(models.Model):
         verbose_name="القسم"
     )
     rank = models.CharField(max_length=50, verbose_name="الرتبة الأكاديمية") # مثال: أستاذ محاضر أ، أستاذ تعليم عالي
-    grade = models.CharField(max_length=20, verbose_name="الدرجة") # مثال: الدرجة 1، 2...
+    grade = models.CharField(max_length=50, verbose_name="الدرجة") # مثال: الدرجة 1، 2...
     
     # 4. التواريخ الإدارية (لاستخراج شهادات العمل والتثبيت)
     joining_date = models.DateField(verbose_name="تاريخ أول الالتحاق")
     confirmation_date = models.DateField(null=True, blank=True, verbose_name="تاريخ التثبيت")
 
     # 5. معلومات التواصل والتواجد
-    phone_number = models.CharField(max_length=20, blank=True, null=True, verbose_name="رقم الهاتف")
+    phone_number = models.CharField(max_length=50, blank=True, null=True, verbose_name="رقم الهاتف")
     office_location = models.CharField(max_length=100, blank=True, null=True, verbose_name="رقم/موقع المكتب")
     
     

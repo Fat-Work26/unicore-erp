@@ -17,7 +17,7 @@ class TeacherUserCreationForm(forms.ModelForm):
     def save(self,commit=True):
             user = super().save(commit=False)
             user.num_inscription = None
-            user.role = User.Role.TEACHER
+            user.type = User.user_type.TEACHER
             user.set_password(DEFAULT_USER_PASSWORD)
             if commit:
                 user.save()
@@ -50,7 +50,7 @@ class CustomTeacherUserAdmin(UserAdmin):
 
 class TeacherAdmin(CustomTeacherUserAdmin):
     def get_queryset(self,request):
-        return super().get_queryset(request).filter(role=User.Role.TEACHER)
+        return super().get_queryset(request).filter(user_type='TEACHER')
     
 
 
@@ -87,7 +87,7 @@ class StudentUserCreationForm(forms.ModelForm):
     def save(self,commit=True):
         user = super().save(commit=False)
         # user.email = None
-        user.role =  User.Role.STUDENT
+        user.type =  User.user_type.STUDENT
         user.set_password(DEFAULT_USER_PASSWORD)
         if commit:
             user.save()
@@ -104,6 +104,6 @@ class CustomStudentUserAdmin(UserAdmin):
         
 class StudentAdmin(CustomStudentUserAdmin):
     def get_queryset(self,request):
-        return super().get_queryset(request).filter(role = User.Role.STUDENT)
+        return super().get_queryset(request).filter(user_type = 'STUDENT')
 
 admin.site.register(Student, StudentAdmin)
