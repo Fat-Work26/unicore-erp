@@ -7,8 +7,13 @@ from .upload_paths import (
 )
 
 class AcademicMobilityOrder(models.Model):
+    STATUS_CHOICES = [
+        ('PENDING','قيد المعالجة'),
+        ('APPROVED', 'مقبول'),
+        ('REJECTED', 'مرفوض'),
+        
+    ]
     user             = models.ForeignKey(User,null=True, on_delete=models.CASCADE)
-    status           = models.CharField(max_length=12,default='قيد المعالجة')
     is_approved      = models.BooleanField(default=False)
     file1            = models.FileField(upload_to=mobility_admin_file_path,blank=True) # for creating file input 
     file2            = models.FileField(upload_to=mobility_scientific_file_path,blank=True) # for creating file input 
@@ -17,7 +22,8 @@ class AcademicMobilityOrder(models.Model):
     updated          = models.DateTimeField(auto_now=True, auto_now_add=False)
     created          = models.DateTimeField(auto_now=False, auto_now_add=True)
     has_updated      = models.BooleanField(default=False)
-    
+    status           = models.CharField(max_length=12,choices=STATUS_CHOICES, default='PENDING', verbose_name="حالة الطلب")
+    rejection_reason = models.TextField(blank=True, null=True, verbose_name="سبب الرفض (في حال الرفض)")
     class Meta:
         ordering = ['-created']
     

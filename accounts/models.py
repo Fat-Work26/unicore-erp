@@ -56,7 +56,7 @@ class TeacherProfile(models.Model):
     last_name_ar = models.CharField(max_length=50, verbose_name="اللقب بالعربية")
     birth_date = models.DateField(null=True, blank=True, verbose_name="تاريخ الميلاد")
     birth_place = models.CharField(max_length=100, verbose_name="مكان الميلاد")
-    photo = models.ImageField(upload_to='teachers/photos/', null=True, blank=True, verbose_name="الصورة الشخصية")
+    photo = models.ImageField(default='default.jpg',upload_to='teachers/photos/', null=True, blank=True, verbose_name="الصورة الشخصية")
    
    # 3. البيانات المهنية والأكاديمية
     employee_id = models.CharField(max_length=50, unique=True, verbose_name="الرقم الوظيفي / المعرف")

@@ -3,14 +3,22 @@
 
 {% block content %}
 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom ">
-    <h1 class="h2"> إدراج ملف التربص <span style ="color:red; font-weight: 900;font-size: 22px; ">***يقصى آليا كل ملف إداري ناقص أي وثيقة مطلوبة***</span> </h1>
+    <h1 class="h2"> إدراج ملف التربص </h1>
   
 </div>
 
 
 </br>
 </br>
-
+<!-- Display Django Messages -->
+{% if messages %}
+  {% for message in messages %}
+    <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+      {{ message }}
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+  {% endfor %}
+{% endif %}
 <form action="" method="POST" enctype="multipart/form-data">
     {% csrf_token %}
     {{ form.as_p }}

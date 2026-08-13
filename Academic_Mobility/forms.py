@@ -6,18 +6,23 @@ class AcademicMobilityOrderFormTeacher(forms.ModelForm):
         model = AcademicMobilityOrder  
         fields = ['file1','file2','notes']
         exclude = ['user','data_create','status','is_approved','updated','created']
-        labels = {
-            
-            'file1': 'الملف الإداري',
-            'file2': 'الملف العلمي',
-            'notes': 'الملاحظات',   
-        }
-        widgets = {
-            'file1': forms.FileInput(attrs={'class': 'form-control'}),
-            'file2': forms.FileInput(attrs={'class': 'form-control'}),
-            'notes': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
-            
-        }
+       
+       
+    file1 = forms.FileField(
+        required=True, 
+        label='الملف الإداري',
+        widget=forms.FileInput(attrs={'class': 'form-control'})
+    )
+    file2 = forms.FileField(
+        required=True,  # Set to True if this is also mandatory
+        label='الملف العلمي',
+        widget=forms.FileInput(attrs={'class': 'form-control'})
+    )
+    notes = forms.CharField(
+        required=False, 
+        label='الملاحظات',
+        widget=forms.Textarea(attrs={'class': 'form-control', 'rows': 3})
+    )
 
 
 

@@ -1,11 +1,13 @@
 from django.db import models
+from django.conf import settings
+
 
 #1. جدول الجامعة / رأس الهرم  
 class University(models.Model):
     name = models.CharField(max_length=200,verbose_name="إسم الجامعة")
     code = models.CharField(max_length=20, unique=True, verbose_name="رمز الجامعة")
    
-    class meta:
+    class Meta:
         verbose_name = "جامعة"
         verbose_name_plural = "الجامعات"
 
@@ -22,6 +24,7 @@ class OrganizationalUnit(models.Model):
         ('LABORATORY', 'مخبر بحث'),
         ('INSTITUTE', 'معهد'),
         ('CENTER', 'مركز خدمة / مكتبة'),
+        ('ADMIN_SERVICE', 'مصلحة إدارية / أمانة / عمادة'),
     )
     university = models.ForeignKey(
         University,
@@ -51,9 +54,6 @@ class OrganizationalUnit(models.Model):
     def __str__(self):
         return f"{self.name} " 
         
-
-
-
 class Departement(models.Model):
     unit = models.ForeignKey(
         OrganizationalUnit,
@@ -70,3 +70,62 @@ class Departement(models.Model):
         # verbose_name_plural = " الاقسام و الفروع"  
     def __str__(self):
         return (f"{self.name}-{self.unit.name}")    
+
+
+# 4. جدول المناصب الإدارية والأكاديمية (الجديد والمكمل)
+class Position(models.Model):
+    title = models.CharField(max_length=150, verbose_name="عنوان المنصب")
+    
+    # كود برمجي ثابت نستخدمه في Django Views للتحقق من الصلاحيات
+    # مثل: VICE_DEAN_POSTGRAD أو HEAD_OF_DEPT
+    code = models.CharField(
+        max_length=50, 
+        unique=True, 
+        verbose_name="الكود البرمجي للمنصب"
+    )
+    
+    # المنصب قد يكون تابعة لوحدة تنظيمية (كلية/مصلحة) أو قسم أكاديمي مباشر
+    unit = models.ForeignKey(
+        OrganizationalUnit, 
+        on_delete=models.CASCADE, 
+        null=True, 
+        blank=True, 
+        related_name='positions',
+        verbose_name="الوحدة التنظيمية / المصلحة"
+    )
+    department = models.ForeignKey(
+        Departement, 
+        on_delete=models.CASCADE, 
+        null=True, 
+        blank=True, 
+        related_name='positions',
+        verbose_name="القسم الأكاديمي (إن وجد)"
+    )
+    
+    # المنصب الأعلى مباشرة (لبناء الهيكل التنظيمي والشجرة المستقبليّة)
+    reports_to = models.ForeignKey(
+        'self', 
+        on_delete=models.SET_NULL, 
+        null=True, 
+        blank=True, 
+        related_name='subordinates',
+        verbose_name="المنصب المسؤول عنه مباشرة"
+    )
+    
+    # الشخص الذي يشغل المنصب حالياً
+    current_occupant = models.ForeignKey(
+        settings.AUTH_USER_MODEL, 
+        on_delete=models.SET_NULL, 
+        null=True, 
+        blank=True, 
+        related_name='occupying_positions',
+        verbose_name="من يشغل المنصب حالياً"
+    )
+
+    class Meta:
+        verbose_name = "منصب إداري"
+        verbose_name_plural = "المناصب الإدارية"
+
+    def __str__(self):
+        occupant = self.current_occupant.get_full_name() if self.current_occupant else "شاغر"
+        return f"{self.title} ({occupant})"

@@ -47,7 +47,7 @@
         <div class="nav-item dropdown">
           <a class="nav-link dropdown-toggle d-flex align-items-center gap-2 text-white" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
             <!-- User Profile Avatar -->
-            <img src="****" alt="User Avatar" class="rounded-circle border border-secondary" width="35" height="35">
+            <img src="{{ user.teacher_profile.photo.url }}" alt="User Avatar" class="rounded-circle border border-secondary" width="35" height="35">
             <!-- Account Name -->
             <span class="fw-semibold small">{{ request.user.username|default:" د:" }}</span>
           </a>
