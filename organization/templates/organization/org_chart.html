@@ -85,13 +85,22 @@
             .nodeHeight(d => 95)
             .compactMarginBetween(d => 25)
             .nodeContent(function(d) {
-              return `
-                <div style="padding:12px; background-color:white; border:2px solid #0d6efd; border-radius:8px; text-align:center; box-shadow: 0 4px 8px rgba(0,0,0,0.08);">
-                   <div style="font-weight:bold; color:#212529; font-size: 14px;">${d.data.name}</div>
-                   <div style="color:#6c757d; font-size:12px; margin-top:6px;">${d.data.title}</div>
-                </div>
-              `;
-            })
+    const avatarUrl = d.data.image_url || 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png';
+    return `
+        <div style="position:relative; padding:15px; background:#ffffff; border-radius:16px; border:1px solid #e2e8f0; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.05); text-align:center;">
+            <!-- صورةAvatar عائمة -->
+            <img src="${avatarUrl}" style="width:50px; height:50px; border-radius:50%; position:absolute; top:-25px; right:15px; border:3px solid white; box-shadow:0 2px 5px rgba(0,0,0,0.2);" />
+            
+            <div style="margin-top:15px; font-weight:bold; color:#1e293b; font-size:14px;">${d.data.name}</div>
+            <div style="color:#64748b; font-size:12px; margin-top:4px;">${d.data.title}</div>
+            
+            <!-- شارة عدد المرؤوسين/المصالح -->
+            <div style="position:absolute; bottom:-12px; left:50%; transform:translateX(-50%); background:#0d6efd; color:white; border-radius:50%; width:24px; height:24px; font-size:11px; display:flex; align-items:center; justify-content:center; border:2px solid white;">
+                ${d.children ? d.children.length : 0}
+            </div>
+        </div>
+    `;
+})
             .render();
         })
         .catch(error => {
