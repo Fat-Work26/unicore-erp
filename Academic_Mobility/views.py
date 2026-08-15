@@ -3,6 +3,8 @@ from django.contrib.auth.decorators import login_required
 from .models import AcademicMobilityOrder
 from .forms import AcademicMobilityOrderFormTeacher
 from django.contrib import messages
+
+
 # ================================================================
 
 # def newOrder(request):

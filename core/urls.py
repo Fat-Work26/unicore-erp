@@ -28,6 +28,7 @@ urlpatterns = [
     path('accounts/',include('accounts.urls')),
     path('teachers/',include('teachers.urls')),
     path('Academic_Mobility/',include('Academic_Mobility.urls')),
+    path('organization/', include('organization.urls')),
 
 ]
 if settings.DEBUG:

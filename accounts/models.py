@@ -1,7 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.conf import settings
-from organization.models import Departement
+from organization.models import Department
 
 class User(AbstractUser):
     class UserType(models.TextChoices):
@@ -62,7 +62,7 @@ class TeacherProfile(models.Model):
     employee_id = models.CharField(max_length=50, unique=True, verbose_name="الرقم الوظيفي / المعرف")
     # ربط الأستاذ بقسمه الرئيسي
     department = models.ForeignKey(
-        Departement,
+        Department,
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
