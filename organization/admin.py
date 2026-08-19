@@ -1,25 +1,40 @@
 from django.contrib import admin
-from .models import University,OrganizationalUnit,Department,Position
+from .models import OrganizationalTemplate,PositionType,OrganizationalUnit,PositionAssignment
 
 
-admin.site.register(University)
-
-admin.site.register(Department)
-admin.site.register(Position)
-
-from django.contrib import admin
-from .models import OrganizationalUnit, Department, Position, University
+@admin.register(OrganizationalTemplate)
+class OrganizationalTemplateAdmin(admin.ModelAdmin):
+    list_display = ('name',  'parent_template', 'code')
+    search_fields = ('name', 'code')
+    ordering = ( 'parent_template', 'name')
 
 @admin.register(OrganizationalUnit)
 class OrganizationalUnitAdmin(admin.ModelAdmin):
-    # 1. الأعمدة التي ستظهر في الجدول (من اليمين إلى اليسار)
-    list_display = ('name',  'parent', 'unit_type','university', 'code')
+    # الحقول التي تظهر في القائمة
+    list_display = ('get_display_name',  'parent','template')
     
-    # 2. الفلاتر الجانبية لتصفية الكيانات بسرعة
-    list_filter = ('unit_type', 'university')
+    # تحسين عرض اسم الوحدة
+    def get_display_name(self, obj):
+        return obj.name or obj.template.name
+    get_display_name.short_description = "اسم الوحدة التنظيمية"
     
-    # 3. حقل البحث بالاسم أو الرمز
-    search_fields = ('name', 'code')
-    
-    # 4. ترتيب العناصر حسب التبعية
-    ordering = ('university', 'parent', 'name')
+    search_fields = ('parent',  'name')
+    ordering = ( 'parent',  'name')
+
+
+
+
+@admin.register(PositionType)
+class PositionTypeAdmin(admin.ModelAdmin):
+    list_display = ('title',   'code')
+    search_fields = ('title', 'code')
+    # ordering = ( 'title')
+
+
+@admin.register(PositionAssignment)
+class PositionAssignmentAdmin(admin.ModelAdmin):
+    list_display = ('position_type','unit','user', 'start_date')
+    search_fields = ('position_type','unit','user')
+    ordering = ( 'position_type','unit','user')
+
+

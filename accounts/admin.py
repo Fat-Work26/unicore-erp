@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
-from .models import User,TeacherProfile,Teacher,Student
+from .models import User,TeacherProfile,Teacher,Student,Staff
 import os
 
 
@@ -63,7 +63,7 @@ class TeacherProfileAdmin(admin.ModelAdmin):
         'employee_id', 
         'first_name_ar', 
         'last_name_ar', 
-        'department', 
+        # 'department', 
         'rank', 
         'joining_date'
     )
@@ -73,7 +73,7 @@ class TeacherProfileAdmin(admin.ModelAdmin):
     search_fields = ('employee_id', 'first_name_ar', 'last_name_ar')
     
     # شريط تصفية جانبي (حسب القسم أو الرتبة)
-    list_filter = ('department', 'rank')
+    # list_filter = ('department', 'rank')
 
 admin.site.register(TeacherProfile,TeacherProfileAdmin)
 # ***************************************************
@@ -107,3 +107,51 @@ class StudentAdmin(CustomStudentUserAdmin):
         return super().get_queryset(request).filter(user_type = 'STUDENT')
 
 admin.site.register(Student, StudentAdmin)
+
+
+
+
+
+# =========================================================
+# 1. إنشاء استمارة مخصصة لإضافة موظف (ModelForm)
+# =========================================================
+class StaffUserCreationForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ('username','email')
+        
+    def save(self,commit=True):
+            user = super().save(commit=False)
+            user.num_inscription = None
+            user.type = User.user_type.STAFF
+            user.set_password(DEFAULT_USER_PASSWORD)
+            if commit:
+                user.save()
+            return user    
+
+# =========================================================
+# 2. كلاس التحكم والإدارة الخاّص بـ Django Admin
+# =========================================================
+class CustomStaffUserAdmin(UserAdmin):
+    add_form = StaffUserCreationForm
+    # 1. إظهار حقل role في جدول عرض المستخدمين الخارجي
+    list_display = ['username', 'email',  'is_staff']
+    
+    # 2. إظهار حقل role داخل صفحة تعديل المستخدم
+    # fieldsets = UserAdmin.fieldsets + (
+    #     ('الصلاحيات والوظيفة', {'fields': ('role',)}),
+    # )
+    
+    # 3. إظهار حقل role في صفحة إنشاء مستخدم جديد
+   
+    add_fieldsets = (
+        ('الصلاحيات و الوظيفة', {
+            'classes': ('wide',),             # تنسيق عريض ومريح للاستمارة
+            'fields': ('username','email'),  # الحقول المعروضة للإداري في صفحة + Add
+        }),
+    )
+class StaffAdmin(CustomStudentUserAdmin):
+    def get_queryset(self,request):
+        return super().get_queryset(request).filter(user_type = 'STAFF')
+
+admin.site.register(Staff, StaffAdmin)
