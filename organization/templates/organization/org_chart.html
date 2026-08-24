@@ -96,24 +96,34 @@
             .compactMarginBetween(d => 30)
             .childrenMargin(d => 50)
             .nodeContent(function(d) {
-                if (d.data.node_type === 'building') {
-                    return `
-                        <div style="padding:12px; background-color:#f0f7ff; border:2px solid #0d6efd; border-radius:12px; text-align:center; box-shadow:0 4px 10px rgba(13,110,253,0.15);">
-                            <div style="font-size:22px; margin-bottom:4px;">🏛️</div>
-                            <div style="font-weight:bold; color:#0b5ed7; font-size:14px;">${d.data.name}</div>
-                            <div style="color:#6c757d; font-size:11px; margin-top:3px;">${d.data.title}</div>
-                        </div>
-                    `;
-                }
+    if (d.data.node_type === 'building') {
+        return `
+            <div style="padding:12px; background-color:#f0f7ff; border:2px solid #0d6efd; border-radius:12px; text-align:center; box-shadow:0 4px 10px rgba(13,110,253,0.15);">
+                <div style="font-size:22px; margin-bottom:4px;">🏛️</div>
+                <div style="font-weight:bold; color:#0b5ed7; font-size:14px;">${d.data.unit_name}</div>
+                <div style="color:#6c757d; font-size:11px; margin-top:3px;">${d.data.title}</div>
+            </div>
+        `;
+    }
 
-                return `
-                    <div style="position:relative; padding:10px; background:#ffffff; border-radius:12px; border:1px solid #cbd5e1; box-shadow:0 4px 6px rgba(0,0,0,0.05); text-align:center; margin-top:15px;">
-                        <img src="${d.data.image_url}" style="width:40px; height:40px; border-radius:50%; position:absolute; top:-18px; right:15px; border:2px solid white; box-shadow:0 2px 4px rgba(0,0,0,0.15); object-fit:cover;" />
-                        <div style="margin-top:10px; font-weight:bold; color:#1e293b; font-size:12px; line-height:1.3;">${d.data.name}</div>
-                        <div style="color:#64748b; font-size:10px; margin-top:3px;">${d.data.title}</div>
-                    </div>
-                `;
-            })
+    return `
+        <div style="position:relative; padding:10px 10px 8px 10px; background:#ffffff; border-radius:12px; border:1px solid #cbd5e1; box-shadow:0 4px 6px rgba(0,0,0,0.05); text-align:center; margin-top:15px;">
+            <!-- الصورة الشخصية لشاغل المنصب -->
+            <img src="${d.data.image_url}" style="width:40px; height:40px; border-radius:50%; position:absolute; top:-20px; right:50%; transform:translateX(50%); border:2px solid white; box-shadow:0 2px 4px rgba(0,0,0,0.15); object-fit:cover;" />
+            
+            <!-- اسم الوحدة / الكلية -->
+            <div style="margin-top:15px; font-weight:bold; color:#0f172a; font-size:12px; line-height:1.2; word-break:break-word;">
+                ${d.data.unit_name}
+            </div>
+
+            <!-- اسم المسؤول (إن وجد) -->
+            ${d.data.full_name ? `<div style="font-size:11px; color:#2563eb; font-weight:600; margin-top:3px;">${d.data.full_name}</div>` : ''}
+
+            <!-- المسمى الوظيفي -->
+            <div style="color:#64748b; font-size:10px; margin-top:2px;">${d.data.title}</div>
+        </div>
+    `;
+})
             .render();
         });
         function expandAllNodes() {
