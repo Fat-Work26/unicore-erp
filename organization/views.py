@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.http import JsonResponse
 from .models import OrganizationalUnit, PositionAssignment
 
@@ -16,7 +16,7 @@ def get_org_chart_data(request):
     for unit in units:
         # 1. تحديد نوع الوحدة وهل هي كلية/جامعة
         unit_type = unit.template.unit_type
-        is_building = unit_type in ['UNIVERSITY', 'FACULTY']
+        is_building = unit_type in ['UNIVERSITY']
 
         # 2. تحديد الاسم والعنوان الوظيفي الافتراضي للوحدة
         unit_name = unit.name or unit.template.name
@@ -56,3 +56,44 @@ def get_org_chart_data(request):
         })
 
     return JsonResponse(chart_data, safe=False)
+
+
+
+
+def unit_detail_view(request, unit_id):
+    # 1. جلب الوحدة التنظيمية المطلوبة
+    unit = get_object_or_404(OrganizationalUnit, id=unit_id)
+    
+    # 2. البحث عن التكليف الإداري النشط حالياً في هذه الوحدة
+    active_assignment = unit.assignments.filter(is_active=True).first()
+    
+    teacher_profile = None
+    qualifications = []
+    researches = []
+    affiliations = []
+    regulation = None
+    
+    if active_assignment:
+        # جلب مهام وقوانين المنصب المرتبط بالتكليف
+        position_type = active_assignment.position_type
+        regulation = getattr(position_type, 'regulation', None)
+        
+        # جلب بيانات الأستاذ المكلف بالسيرة الذاتية
+        user = active_assignment.user
+        if hasattr(user, 'teacher_profile'):
+            teacher_profile = user.teacher_profile
+            qualifications = teacher_profile.qualifications.all()
+            researches = teacher_profile.researches.all()
+            affiliations = teacher_profile.affiliations.filter(is_active=True)
+
+    context = {
+        'unit': unit,
+        'active_assignment': active_assignment,
+        'teacher_profile': teacher_profile,
+        'qualifications': qualifications,
+        'researches': researches,
+        'affiliations': affiliations,
+        'regulation': regulation,
+    }
+    
+    return render(request, 'organization/unit_detail.html', context)    

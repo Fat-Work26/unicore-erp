@@ -124,6 +124,15 @@
         </div>
     `;
 })
+        // ==========================================
+        //  هنا تماماً تضعين كود الضغط الانتقالي (onNodeClick)
+        // ==========================================
+        .onNodeClick(nodeId => {
+          // استخراج معرف الوحدة والتوجيه لصفحة التفاصيل
+          if (nodeId) {
+            window.location.href = `/organization/unit/${nodeId}/detail/`;
+          }
+        })
             .render();
         });
         function expandAllNodes() {

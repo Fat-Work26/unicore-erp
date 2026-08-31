@@ -9,4 +9,5 @@ urlpatterns = [
     
     # 2. مسار جلب البيانات بصيغة JSON للـ JavaScript
     path('api/org-chart-data/', views.get_org_chart_data, name='org_chart_data'),
+    path('unit/<int:unit_id>/detail/', views.unit_detail_view, name='unit_detail'),
 ]
