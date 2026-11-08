@@ -6,8 +6,6 @@
     <h1 class="h2"> إدراج ملف التربص </h1>
   
 </div>
-
-
 </br>
 </br>
 <!-- Display Django Messages -->
@@ -19,15 +17,45 @@
     </div>
   {% endfor %}
 {% endif %}
+{% if active_session and active_session.is_currently_open %}
+    <!-- بطاقة معلومات الدورة المفتوحة ورابط الإعلان -->
+    <div class="card border-0 bg-light border-start border-primary border-4 shadow-sm mb-4">
+        <div class="card-body d-flex justify-content-between align-items-center flex-wrap">
+            <div>
+                <span class="badge bg-primary mb-2">{{ active_session.get_session_type_display }}</span>
+                <h5 class="card-title text-primary mb-1">{{ active_session.title }}</h5>
+                <p class="card-text text-muted mb-0 small">
+                    فترة إيداع الملفات ممتدة من <strong>{{ active_session.start_date|date:"Y-m-d" }}</strong> 
+                    إلى غاية <strong>{{ active_session.end_date|date:"Y-m-d" }}</strong>
+                </p>
+            </div>
+            
+            {% if active_session.announcement_url %}
+                <div class="mt-2 mt-md-0">
+                    <a href="{{ active_session.announcement_url }}" target="_blank" class="btn btn-outline-primary btn-sm">
+                        الإعلان الرسمي على موقع الجامعة <i class="bi bi-box-arrow-up-right ms-1"></i>
+                    </a>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- نموذج تقديم الطلب -->
 <form action="" method="POST" enctype="multipart/form-data">
     {% csrf_token %}
     {{ form.as_p }}
    
-    
-     
-   
-    <button type="submit" class="btn btn-primary btn-lg btn-block">إرسال الطلب</button>
+    <button type="submit" class="btn btn-primary btn-lg w-100">إرسال الطلب</button>
 </form>
-
-
+{% else %}
+    <!-- حالة إغلاق الدورة -->
+    <div class="card text-center my-5 p-4 border-0 shadow-sm bg-light">
+        <div class="card-body">
+            <h4 class="card-title text-secondary mb-3">فترة تقديم طلبات التربص مغلقة حالياً</h4>
+            <p class="card-text text-muted">
+                يتم فتح استقبال ملفات الترشح بناءً على الإعلانات الرسمية الصادرة عن الكلية أو الجامعة.
+            </p>
+        </div>
+    </div>
+{% endif %}
 {% endblock content %}

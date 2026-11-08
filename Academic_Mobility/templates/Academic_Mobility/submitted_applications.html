@@ -1,0 +1,66 @@
+{% extends 'teachers/base_app_teacher.html' %}
+
+{% block title %}دراسة طلبات التربص المودعة{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>جدول الطلبات المودعة (نائب العميد لما بعد التدرج)</h2>
+        <span class="badge bg-primary fs-6">إجمالي الطلبات: {{ applications.count }}</span>
+    </div>
+
+    {% if applications %}
+        <div class="card shadow-sm">
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th>#</th>
+                                <th>المتقدم</th>
+                                <th>عنوان التربص / المهمة</th>
+                                <th>تاريخ الإيداع</th>
+                                <th>الحالة</th>
+                                <th class="text-center">الإجراءات</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for app in applications %}
+                                <tr>
+                                    <td>{{ forloop.counter }}</td>
+                                    <td>
+                                        <strong>{{ app.user.get_full_name|default:app.user.username }}</strong>
+                                    </td>
+                                    <td>{{ app.title|default:"طلب تربص قصير المدى" }}</td>
+                                    <td>{{ app.created|date:"Y-m-d H:i" }}</td>
+                                    <td>
+                                        {% if app.status == 'SUBMITTED' %}
+                                            <span class="badge bg-warning text-dark">قيد الدراسة</span>
+                                        {% elif app.status == 'APPROVED' %}
+                                            <span class="badge bg-success">مقبول</span>
+                                        {% elif app.status == 'REJECTED' %}
+                                            <span class="badge bg-danger">مرفوض</span>
+                                        {% else %}
+                                            <span class="badge bg-secondary">{{ app.status }}</span>
+                                        {% endif %}
+                                    </td>
+                                    <td class="text-center">
+                                        <!-- رابط لمعاينة دراسة الملف مستقبلاً -->
+                                        <a href="#" class="btn btn-sm btn-outline-primary">
+                                            معاينة ودراسة
+                                        </a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    {% else %}
+        <div class="alert alert-info text-center" role="alert">
+            لا توجد طلبات مودعة حالياً للدراسة.
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

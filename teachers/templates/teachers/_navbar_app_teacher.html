@@ -28,7 +28,19 @@
           </a>
           
           <ul class="dropdown-menu dropdown-menu-dark shadow dropdown-menu-end text-end" dir="rtl">
-            <li><a class="dropdown-item" href="{% url 'newOrder' %}">طلب التربص</a></li>
+            <li><a class="dropdown-item" href="{% url 'Academic_Mobility:newOrder' %}">طلب التربص</a></li>
+           {% if is_postgrad_vice_dean %}
+              <li>
+                  <a class="dropdown-item" href="{% url 'Academic_Mobility:list_submitted_applications' %}">
+                      دراسة الطلبات المودعة
+                  </a>
+              </li>
+              <li>
+                  <a class="dropdown-item" href="{% url 'Academic_Mobility:manage_session' %}">
+                     تسيير دورات التربص
+                  </a>
+              </li>
+          {% endif %}
             <li><a class="dropdown-item" href="#">الملف بعد التربص</a></li>
             <li><hr class="dropdown-divider"></li>
             <li><a class="dropdown-item" href="#">الأرشيف</a></li>

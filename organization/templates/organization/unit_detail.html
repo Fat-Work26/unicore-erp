@@ -84,34 +84,39 @@
                     
                     <!-- الصورة الشخصية -->
                     <div class="mb-3">
-                        {% if teacher_profile.photo %}
+                        {% if teacher_profile and teacher_profile.photo %}
                             <img src="{{ teacher_profile.photo.url }}" class="rounded-circle border" style="width: 120px; height: 120px; object-fit: cover;" alt="الصورة الشخصية">
+                        {% elif staff_profile and staff_profile.photo %}
+                            <img src="{{ staff_profile.photo.url }}" class="rounded-circle border" style="width: 120px; height: 120px; object-fit: cover;" alt="الصورة الشخصية">
                         {% else %}
-                            <img src="{% static 'images/default_avatar.png' %}" class="rounded-circle border" style="width: 120px; height: 120px; object-fit: cover;" alt="صورة افتراضية">
+                            <img src="{% static 'images/default.png' %}" class="rounded-circle border" style="width: 120px; height: 120px; object-fit: cover;" alt="صورة افتراضية">
                         {% endif %}
                     </div>
 
-                    <!-- الرتبة والاسم -->
+                    <!-- الرتبة/الدرجة والاسم -->
                     <span class="badge bg-light text-primary border mb-2 px-3 py-1 fw-normal">
-                        {{ teacher_profile.rank|default:"أستاذ تعليم عالي" }}
+                        {% if teacher_profile %}
+                            {{ teacher_profile.rank|default:"أستاذ تعليم عالي" }}
+                        {% elif staff_profile %}
+                            {{ staff_profile.grade|default:"موظف إداري" }}
+                        {% endif %}
                     </span>
                     <h4 class="fw-bold text-dark mb-4">
                         {% if teacher_profile %}
                             {{ teacher_profile.first_name_ar }} {{ teacher_profile.last_name_ar }}
+                        {% elif staff_profile %}
+                            {{ staff_profile.first_name_ar }} {{ staff_profile.last_name_ar }}
                         {% else %}
-                            آيات الراشد
+                            غير مكلف
                         {% endif %}
-                    </h4>
+                    </h4>   
 
                     <!-- التفاصيل المكونة في مربعات مغلقة -->
                     <div class="uqu-sidebar-box">
-                        <small class="text-muted d-block mb-1">القسم</small>
-                        <div class="fw-bold text-dark">{{ teacher_profile.home_department|default:"الدراسات القضائية" }}</div>
-                    </div>
-
-                    <div class="uqu-sidebar-box">
-                        <small class="text-muted d-block mb-1">الجهة</small>
-                        <div class="fw-bold text-dark">{{ teacher_profile.home_college|default:"كلية الدراسات القضائية والأنظمة" }}</div>
+                        <small class="text-muted d-block mb-1">الرقم الوظيفي</small>
+                        <div class="fw-bold text-dark">
+                            {% if teacher_profile %}{{ teacher_profile.employee_id }}{% elif staff_profile %}{{ staff_profile.employee_id }}{% else %}-{% endif %}
+                        </div>
                     </div>
 
                     <div class="uqu-sidebar-box">
@@ -121,11 +126,13 @@
 
                     <div class="uqu-sidebar-box">
                         <small class="text-muted d-block mb-1">تواصل</small>
-                        <div class="text-dark small">{{ active_assignment.user.email|default:"teacher3@unicore-demo.edu" }}</div>
+                        <div class="text-dark small">{{ active_assignment.user.email|default:"-" }}</div>
                     </div>
 
+                    
+
                     <div class="uqu-sidebar-box">
-                        <small class="text-muted d-block mb-1">مهام وقوانين المنصب</small>
+                         <small class="text-muted d-block mb-1">مهام وقوانين المنصب</small>
                         {% if regulation %}
                             <div class="text-dark small text-start">{{ regulation.tasks|truncatewords:15 }}</div>
                         {% else %}
@@ -138,7 +145,8 @@
 
             <!-- ==================== العمود الأيسر: المؤهلات والأبحاث (8 أعمدة) ==================== -->
             <div class="col-lg-8">
-                
+               {% if teacher_profile %}
+    <!-- ================= سيرة الأستاذ ================= --> 
                 <!-- أزرار التصفية العلوية -->
                 <div class="d-flex gap-2 justify-content-start mb-3">
                     <button class="btn filter-btn btn-dark-custom active" onclick="filterCards('all', this)">الكل</button>
@@ -227,7 +235,51 @@
                         </div>
                     {% endif %}
                 </div>
+               {% elif staff_profile %}
+    <!-- ================= سيرة الموظف الإداري ================= -->
+                <div class="d-flex gap-2 justify-content-start mb-3">
+                    <button type="button" class="btn filter-btn btn-dark-custom active" onclick="filterEmpCards('all', this)">الكل</button>
+                    <button type="button" class="btn filter-btn btn-outline-custom" onclick="filterEmpCards('qualifications', this)">مؤهلات التوظيف</button>
+                    <button type="button" class="btn filter-btn btn-outline-custom" onclick="filterEmpCards('promotions', this)">الترقيات والمسار الإداري</button>
+                </div>
 
+    <!-- بطاقة مؤهلات التوظيف -->
+                <div class="uqu-card filter-emp-card mb-3" id="emp-qualifications-card">
+                    <h6 class="fw-bold text-dark mb-4 text-end"><i class="bi bi-award-fill me-2 text-secondary"></i> مؤهلات التوظيف والشهادات</h6>
+                    {% if staff_qualifications %}
+                        {% for qual in staff_qualifications %}
+                        <div class="timeline-item mb-3 text-end">
+                            <div class="timeline-year">{{ qual.year }}</div>
+                            <div class="flex-grow-1">
+                                <h6 class="fw-bold text-dark mb-1">{{ qual.title }}</h6>
+                                <div class="text-muted small">{{ qual.institution }}</div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    {% else %}
+                        <div class="text-muted text-center py-3">لا توجد مؤهلات توظيف مسجلة.</div>
+                    {% endif %}
+                </div>
+
+    <!-- بطاقة الترقيات والتدرج الوظيفي -->
+                <div class="uqu-card filter-emp-card" id="emp-promotions-card">
+                    <h6 class="fw-bold text-dark mb-4 text-end"><i class="bi bi-graph-up-arrow me-2 text-secondary"></i> الترقيات والدرجات الوظيفية</h6>
+                    {% if promotions %}
+                        {% for promo in promotions %}
+                        <div class="timeline-item mb-3 text-end">
+                            <div class="timeline-year">{{ promo.promotion_date|date:"Y" }}</div>
+                            <div class="flex-grow-1">
+                                <h6 class="fw-bold text-dark mb-1">الترقية إلى {{ promo.new_grade }}</h6>
+                                <div class="text-muted small">الدرجة السابقة: {{ promo.previous_grade }}</div>
+                                {% if promo.decision_number %}<div class="text-muted small">رقم القرار: {{ promo.decision_number }}</div>{% endif %}
+                            </div>
+                        </div>
+                        {% endfor %}
+                    {% else %}
+                        <div class="text-muted text-center py-3">لا توجد ترقيات إدارية مسجلة.</div>
+                    {% endif %}
+                </div>
+{% endif %}
             </div>
 
         </div>
@@ -257,6 +309,30 @@ function filterCards(type, btnElement) {
     } else if (type === 'research') {
         qualCard.style.display = 'none';
         researchCard.style.display = 'block';
+    }
+}
+
+function filterEmpCards(type, btnElement) {
+    const buttons = btnElement.parentElement.querySelectorAll('.filter-btn');
+    buttons.forEach(btn => {
+        btn.classList.remove('btn-dark-custom');
+        btn.classList.add('btn-outline-custom');
+    });
+    btnElement.classList.remove('btn-outline-custom');
+    btnElement.classList.add('btn-dark-custom');
+
+    const qualCard = document.getElementById('emp-qualifications-card');
+    const promoCard = document.getElementById('emp-promotions-card');
+
+    if (type === 'all') {
+        qualCard.style.display = 'block';
+        promoCard.style.display = 'block';
+    } else if (type === 'qualifications') {
+        qualCard.style.display = 'block';
+        promoCard.style.display = 'none';
+    } else if (type === 'promotions') {
+        qualCard.style.display = 'none';
+        promoCard.style.display = 'block';
     }
 }
 </script>

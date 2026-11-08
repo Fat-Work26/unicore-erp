@@ -194,3 +194,29 @@ class StaffProfile(models.Model):
 
     def __str__(self):
         return f"موظف: {self.first_name_ar} {self.last_name_ar}"
+ 
+
+class StaffQualification(models.Model):
+    staff = models.ForeignKey('StaffProfile', on_delete=models.CASCADE, related_name='qualifications')
+    title = models.CharField(max_length=150, verbose_name="اسم الشهادة / المؤهل")
+    institution = models.CharField(max_length=150, verbose_name="المؤسسة / الجامعة")
+    year = models.IntegerField(verbose_name="سنة الحصول عليها")
+
+    class Meta:
+        ordering = ['-year']
+
+    def __str__(self):
+        return f"{self.title} - {self.staff}"
+
+class StaffPromotion(models.Model):
+    staff = models.ForeignKey('StaffProfile', on_delete=models.CASCADE, related_name='promotions')
+    previous_grade = models.CharField(max_length=50, verbose_name="الدرجة/الرتبة السابقة")
+    new_grade = models.CharField(max_length=50, verbose_name="الدرجة/الرتبة الجديدة")
+    promotion_date = models.DateField(verbose_name="تاريخ الترقية")
+    decision_number = models.CharField(max_length=100, blank=True, null=True, verbose_name="رقم القرار الإداري")
+
+    class Meta:
+        ordering = ['-promotion_date']
+
+    def __str__(self):
+        return f"ترقية {self.staff} إلى {self.new_grade}"

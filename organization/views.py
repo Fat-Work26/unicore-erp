@@ -68,31 +68,41 @@ def unit_detail_view(request, unit_id):
     active_assignment = unit.assignments.filter(is_active=True).first()
     
     teacher_profile = None
+    staff_profile = None
     qualifications = []
     researches = []
     affiliations = []
+    staff_qualifications = []
+    promotions = []
     regulation = None
     
     if active_assignment:
         # جلب مهام وقوانين المنصب المرتبط بالتكليف
         position_type = active_assignment.position_type
         regulation = getattr(position_type, 'regulation', None)
-        
-        # جلب بيانات الأستاذ المكلف بالسيرة الذاتية
         user = active_assignment.user
+
+         # جلب بيانات الأستاذ المكلف بالسيرة الذاتية
         if hasattr(user, 'teacher_profile'):
             teacher_profile = user.teacher_profile
             qualifications = teacher_profile.qualifications.all()
             researches = teacher_profile.researches.all()
             affiliations = teacher_profile.affiliations.filter(is_active=True)
-
+        # ب) حالة: المكلف موظف إداري
+        elif hasattr(user, 'staff_profile'):
+            staff_profile = user.staff_profile
+            staff_qualifications = staff_profile.qualifications.all()
+            promotions = staff_profile.promotions.all()
     context = {
         'unit': unit,
         'active_assignment': active_assignment,
         'teacher_profile': teacher_profile,
+        'staff_profile': staff_profile,
         'qualifications': qualifications,
         'researches': researches,
         'affiliations': affiliations,
+        'staff_qualifications': staff_qualifications,
+        'promotions': promotions,
         'regulation': regulation,
     }
     

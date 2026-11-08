@@ -1,0 +1,122 @@
+{% extends 'teachers/base_app_teacher.html' %}
+
+{% block title %}إدارة دورات التربص{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2 class="mb-4">إدارة دورات التربص والآجال الرسمية</h2>
+
+    <!-- عرض الرسائل (نجاح / تنبيه) -->
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <div class="row g-4">
+        <!-- 1. حالة الدورة الحالية والإجراءات المباشرة -->
+        <div class="col-md-5">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-header bg-dark text-white font-weight-bold">
+                    حالة الدورة الحالية
+                </div>
+                <div class="card-body">
+                    {% if active_session %}
+                        <div class="mb-3">
+                            <span class="badge {% if active_session.session_type == 'EXCEPTIONAL' %}bg-warning text-dark{% else %}bg-primary{% endif %} mb-2">
+                                {{ active_session.get_session_type_display }}
+                            </span>
+                            <h4 class="card-title">{{ active_session.title }}</h4>
+                        </div>
+                        
+                        <ul class="list-group list-group-flush mb-3">
+                            <li class="list-group-item d-flex justify-content-between">
+                                <span>تاريخ الفتح:</span>
+                                <strong>{{ active_session.start_date|date:"Y-m-d H:i" }}</strong>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between">
+                                <span>تاريخ الغلق الحالي:</span>
+                                <strong class="text-danger">{{ active_session.end_date|date:"Y-m-d H:i" }}</strong>
+                            </li>
+                        </ul>
+
+                        <hr>
+
+                        <!-- نموذج تمديد الدورة -->
+                        <form method="post" class="mb-3">
+                            {% csrf_token %}
+                            <input type="hidden" name="action" value="extend">
+                            <label class="form-label font-weight-bold">تمديد أجل الدورة الحالية:</label>
+                            <div class="input-group mb-2">
+                                <input type="datetime-local" name="new_end_date" class="form-control" required>
+                                <button type="submit" class="btn btn-outline-warning">تطبيق التمديد</button>
+                            </div>
+                        </form>
+
+                        <!-- زر إغلاق الدورة -->
+                        <form method="post" onsubmit="return confirm('هل أنت تأكد من إغلاق الدورة الحالية؟');">
+                            {% csrf_token %}
+                            <input type="hidden" name="action" value="close">
+                            <button type="submit" class="btn btn-outline-danger w-100">إغلاق الدورة فوراً</button>
+                        </form>
+
+                    {% else %}
+                        <div class="text-center py-4 text-muted">
+                            <i class="bi bi-calendar-x display-4"></i>
+                            <p class="mt-2 fs-5">لا توجد أي دورة مفتوحة حالياً.</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- 2. نموذج فتح دورة جديدة (عادية أو استثنائية) -->
+        <div class="col-md-7">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-header bg-primary text-white font-weight-bold">
+                    فتح دورة جديدة / استثنائية
+                </div>
+                <div class="card-body">
+                    <form method="post">
+                        {% csrf_token %}
+                        <input type="hidden" name="action" value="create">
+
+                        <div class="mb-3">
+                            <label for="title" class="form-label">عنوان الدورة</label>
+                            <input type="text" class="form-control" id="title" name="title" placeholder="مثال: دورة التربصات قصيرة المدى لسنة 2026" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="session_type" class="form-label">نوع الدورة</label>
+                            <select class="form-select" id="session_type" name="session_type" required>
+                                <option value="REGULAR" selected>دورة عادية</option>
+                                <option value="EXCEPTIONAL">دورة استثنائية</option>
+                            </select>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="start_date" class="form-label">تاريخ وتوقيت الفتح</label>
+                                <input type="datetime-local" class="form-control" id="start_date" name="start_date" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="end_date" class="form-label">تاريخ وتوقيت الغلق</label>
+                                <input type="datetime-local" class="form-control" id="end_date" name="end_date" required>
+                            </div>
+                        </div>
+
+                        <div class="alert alert-info small" role="alert">
+                            ملاحظة: فتح دورة جديدة سيؤدي تلقائياً إلى أرشفة وإغلاق أي دورة سابقة كانت مفتوحة.
+                        </div>
+
+                        <button type="submit" class="btn btn-success w-100 mt-2">تأكيد وفتح الدورة</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
